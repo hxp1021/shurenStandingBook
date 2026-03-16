@@ -133,7 +133,7 @@ Page({
       openid: openid // 关键：绑定当前用户的openid
     };
 
-    // 插入到数据库集合
+    // 插入到数据库集合中
     db.collection('project_manage').add({
       data: submitData,
       success: (res) => {
