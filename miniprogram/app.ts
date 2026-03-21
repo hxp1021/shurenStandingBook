@@ -17,7 +17,6 @@ App<IAppOption>({
       name: 'getOpenid',
       success: (res) => {
         this.globalData.openid = res.result.openid;
-        console.log(res, '>>>>>>>>>1111111111')
       },
       fail: (err) => {
         console.error('启动时获取OpenID失败：', err);
@@ -27,7 +26,6 @@ App<IAppOption>({
     // 登录
     wx.login({
       success: res => {
-        console.log(res.code, '>>>>>>>>')
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       },
     })

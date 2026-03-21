@@ -1,36 +1,11 @@
 <view class="list-container">
   <!-- 筛选栏 -->
   <view class="filter-bar">
-    <picker 
-      mode="selector" 
-      range="{{deliveryFilterOptions}}" 
-      value="{{currentFilter}}" 
-      bindchange="handleFilterChange"
-    >
-      <view class="filter-btn">
-        {{deliveryFilterOptions[currentFilter]}}
-        <icon type="down" size="14"></icon>
-      </view>
-    </picker>
-    <input 
-      class="search-input" 
-      placeholder="搜索姓名/项目" 
-      value="{{searchKeyword}}"
-      bindinput="handleSearchInput"
-      confirm-type="search"
-      bindconfirm="handleSearch"
-    />
+    <input class="search-input" placeholder="搜索姓名/项目" value="{{searchKeyword}}" bindinput="handleSearchInput" confirm-type="search" bindconfirm="handleSearch" />
   </view>
 
   <!-- 数据列表 -->
-  <scroll-view 
-    class="list-scroll"
-    scroll-y
-    refresher-enabled="true"
-    bindrefresherrefresh="onPullDownRefresh"
-    bindscrolltolower="onReachBottom"
-    refresher-triggered="{{refreshing}}"
-  >
+  <scroll-view class="list-scroll" scroll-y refresher-enabled="true" bindrefresherrefresh="onPullDownRefresh" bindscrolltolower="onReachBottom" refresher-triggered="{{refreshing}}">
     <!-- 空数据提示 -->
     <view class="empty-tip" wx:if="{{listData.length === 0 && !loading}}">
       <text>暂无数据</text>
@@ -54,10 +29,7 @@
         <text class="label">方向：</text>
         <text class="value">{{item.direction}}</text>
       </view>
-      <view class="item-row">
-        <text class="label">交付时间：</text>
-        <text class="value">{{item.deliveryTime}}</text>
-      </view>
+
       <view class="item-row">
         <text class="label">费用：</text>
         <text class="value">¥{{item.fee}}</text>
@@ -66,18 +38,38 @@
         <text class="label">已付：</text>
         <text class="value {{item.paid ? 'paid' : 'unpaid'}}">{{item.paid ? '是' : '否'}}</text>
       </view>
-      <view class="item-row">
-        <text class="label">交付状态：</text>
-        <text class="value status-{{item.deliveryStatus === '已交付' ? 'done' : (item.deliveryStatus === '部分交付' ? 'partial' : 'undone')}}">
-          {{item.deliveryStatus}}
-        </text>
-      </view>
       <view class="item-row" wx:if="{{item.remark}}">
         <text class="label">备注：</text>
         <text class="value">{{item.remark}}</text>
       </view>
-    </view>
+      <view class="item-row">
+        <text class="label">交付时间：</text>
+        <text class="value">{{item.deliveryTime}}</text>
+      </view>
 
+      <!-- 添加文件列表显示 -->
+      <view class="file-list" wx:if="{{item.files && item.files.length > 0}}">
+        <text class="file-list-label">相关文件：</text>
+        <view class="file-items">
+          <view class="file-item" wx:for="{{item.files}}" wx:key="url" wx:for-item="file">
+            <text class="file-name">{{file.name}}</text>
+            <!-- <text class="file-size">({{Math.floor(file.size/1024) + 'KB'}})</text> -->
+            <text class="file-view" bindtap="viewFile" data-url="{{file.url}}">查看</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="file-list" wx:if="{{item.confirmDeliver && !!item.biddingDoc}}">
+        <text class="file-list-label">标书：</text>
+        <view class="file-items">
+          <view class="file-item" wx:for="{{[item.biddingDoc]}}" wx:key="url" wx:for-item="file">
+            <text class="file-name">{{file.name}}</text>
+            <!-- <text class="file-size">({{Math.floor(file.size/1024) + 'KB'}})</text> -->
+            <text class="file-view" bindtap="viewFile" data-url="{{file.url}}">查看</text>
+          </view>
+        </view>
+      </view>
+    </view>
     <!-- 加载中提示 -->
     <view class="loading-tip" wx:if="{{loading}}">
       <loading size="20">加载中...</loading>

@@ -15,7 +15,11 @@
     <!-- 项目 -->
     <view class="form-item">
       <label class="form-label">项目</label>
-      <input class="form-input" name="project" placeholder="请输入项目名称" value="{{formData.project}}" bindinput="handleInput" data-key="project" />
+      <picker mode="selector" range="{{projectOptions}}" value="{{projectIndex}}" bindchange="handleProjectChange">
+        <view class="form-input placeholder">
+          {{formData.project || '请选择项目类型'}}
+        </view>
+      </picker>
     </view>
 
     <!-- 方向 -->
@@ -55,14 +59,31 @@
       <textarea class="form-textarea" name="remark" placeholder="请输入备注信息（选填）" value="{{formData.remark}}" bindinput="handleInput" data-key="remark" maxlength="200" />
     </view>
 
-    <!-- 交付状态 -->
+    <!-- 文件上传 -->
     <view class="form-item">
-      <label class="form-label">交付</label>
-      <picker mode="selector" range="{{deliveryOptions}}" value="{{formData.deliveryStatus}}" bindchange="handleDeliveryChange">
-        <view class="form-input placeholder">
-          {{deliveryOptions[formData.deliveryStatus]}}
+      <label class="form-label">相关文件</label>
+      <view class="file-upload">
+        <button class="upload-btn" bindtap="chooseFile" disabled="{{uploading}}">
+          <text>{{uploading ? '上传中...' : '选择文件'}}</text>
+        </button>
+        <view class="file-list">
+          <view class="file-item" wx:for="{{formData.files}}" wx:key="url">
+            <view class="file-info">
+              <text class="file-name">{{item.name}}</text>
+              <text class="file-size">{{item.displaySize}}</text>
+            </view>
+            <view class="file-actions">
+              <button class="file-action-btn" bindtap="removeFile" data-index="{{index}}">删除</button>
+            </view>
+          </view>
         </view>
-      </picker>
+      </view>
+    </view>
+
+    <!-- 提交人 -->
+    <view class="form-item">
+      <label class="form-label">提交人</label>
+      <input class="form-input" name="submitUserName" placeholder="请输入提交人" value="{{formData.submitUserName}}" bindinput="handleInput" data-key="submitUserName" />
     </view>
 
     <!-- 提交按钮组 -->

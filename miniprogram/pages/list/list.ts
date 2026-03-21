@@ -6,8 +6,6 @@ Page({
     // 列表数据
     listData: [],
     // 筛选相关
-    deliveryFilterOptions: ['全部', '未交付', '已交付', '部分交付'],
-    currentFilter: 0, // 默认选中全部
     searchKeyword: '', // 搜索关键词
     // 加载相关
     loading: false, // 加载状态
@@ -46,15 +44,7 @@ Page({
       openid: openid // 只查询当前用户提交的数据
     });
 
-    // 1. 筛选交付状态（原有逻辑保留）
-    if (this.data.currentFilter !== 0) {
-      const filterStatus = this.data.deliveryFilterOptions[this.data.currentFilter];
-      query = query.where({
-        deliveryStatus: filterStatus
-      });
-    }
- 
-    // 2. 搜索关键词（原有逻辑保留）
+    // 1. 搜索关键词
     if (this.data.searchKeyword) {
       query = query.where(db.command.and([
         { openid: openid }, // 必须保留openid筛选
@@ -169,5 +159,51 @@ Page({
         this.loadData();
       });
     }
-  }
+  },
+
+  // 在Page({})内部添加以下方法
+  /**
+   * 查看文件
+   */
+  viewFile(e) {
+    console.log(e, '>>>>>')
+    const { url } = e.currentTarget.dataset;
+    wx.showLoading({ title: '加载文件中...' });
+    wx.cloud.getTempFileURL({
+      fileList: [url],
+      success: (res) => {
+        // 得到 HTTPS 临时链接（示例）：
+        // https://cos.ap-guangzhou.myqcloud.com/xxx/xxx.pdf
+        const httpsUrl = res.fileList[0].tempFileURL;
+        console.log('HTTPS 链接：', httpsUrl);
+        wx.downloadFile({
+          url: httpsUrl,
+          success: (res) => {
+            wx.hideLoading();
+            wx.openDocument({
+              filePath: res.tempFilePath,
+              showMenu: true,
+              success: (res) => console.log('打开文档成功'),
+              fail: (err) => {
+                console.error('打开文档失败:', err);
+                wx.showToast({
+                  title: '不支持此文件类型',
+                  icon: 'none'
+                });
+              }
+            });
+          },
+          fail: (err) => {
+            wx.hideLoading();
+            console.error('下载文件失败:', err);
+            wx.showToast({
+              title: '文件下载失败',
+              icon: 'none'
+            });
+          }
+        });
+      }
+    })
+    
+  },
 });
