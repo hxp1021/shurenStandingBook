@@ -1,8 +1,7 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/logs/logs",
     "pages/home/home",
+    "pages/logs/logs",
     "pages/list/list"
   ],
   "window": {
@@ -24,17 +23,14 @@
   "tabBar": {
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/list/list",
         "text": "首页"
       },
       {
         "pagePath": "pages/home/home",
         "text": "新建"
-      },
-      {
-        "pagePath": "pages/list/list",
-        "text": "列表"
       }
+
     ]
   }
 }
