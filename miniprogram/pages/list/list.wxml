@@ -35,6 +35,10 @@
         <text class="value">{{item.feeType}}</text>
       </view>
       <view class="item-row">
+        <text class="label">费用（万）：</text>
+        <text class="value">{{item.fee}}万</text>
+      </view>
+      <view class="item-row">
         <text class="label">已付金额：</text>
         <text class="value">¥{{item.paidAmount}}万</text>
       </view>

@@ -11,6 +11,7 @@ Page({
       direction: '',
       deliveryTime: '', // 交付时间
       feeType: '', // 费用类型
+      fee: '', // 费用（万）
       paidAmount: '', // 已付金额
       remark: '', // 备注
       files: [], // 上传的文件列表
