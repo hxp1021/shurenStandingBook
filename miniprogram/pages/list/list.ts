@@ -40,6 +40,9 @@ Page({
     // 获取云数据库引用
     const db = wx.cloud.database();
     // 构建查询条件（核心：添加openid筛选）
+    if (!openid) {
+      return
+    }
     let query = db.collection('project_manage').where({
       openid: openid // 只查询当前用户提交的数据
     });

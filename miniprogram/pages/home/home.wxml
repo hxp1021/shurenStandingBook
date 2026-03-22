@@ -51,7 +51,7 @@
     <!-- 费用（万） -->
     <view class="form-item">
       <label class="form-label">费用（万）</label>
-      <input class="form-input" name="fee" type="digit" placeholder="请输入总费用（万元）" value="{{formData.fee}}" bindinput="handleInput" data-key="fee" />
+      <input class="form-input" name="fee" type="digit" placeholder="请输入总费用（万）" value="{{formData.fee}}" bindinput="handleInput" data-key="fee" />
     </view>
 
     <!-- 已付金额 -->
