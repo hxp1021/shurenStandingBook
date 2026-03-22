@@ -31,12 +31,12 @@
       </view>
 
       <view class="item-row">
-        <text class="label">费用：</text>
-        <text class="value">¥{{item.fee}}</text>
+        <text class="label">费用类型：</text>
+        <text class="value">{{item.feeType}}</text>
       </view>
       <view class="item-row">
-        <text class="label">已付：</text>
-        <text class="value {{item.paid ? 'paid' : 'unpaid'}}">{{item.paid ? '是' : '否'}}</text>
+        <text class="label">已付金额：</text>
+        <text class="value">¥{{item.paidAmount}}万</text>
       </view>
       <view class="item-row" wx:if="{{item.remark}}">
         <text class="label">备注：</text>

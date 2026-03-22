@@ -10,14 +10,16 @@ Page({
       project: '',
       direction: '',
       deliveryTime: '', // 交付时间
-      fee: '', // 费用
-      paid: false, // 已付
+      feeType: '', // 费用类型
+      paidAmount: '', // 已付金额
       remark: '', // 备注
       files: [], // 上传的文件列表
       submitUserName: '', // 提交者用户名,
     },
-    projectOptions: ['其他', '卫生厅', '中管局', '国青', '省自然', '面上'],
+    projectOptions: ['中管局', '卫生厅', '省自然', '国青', '面上', '其他'],
     projectIndex: 0,
+    feeTypeOptions: ['自费', '经费'],
+    feeTypeIndex: 0,
     uploading: false, // 文件上传状态
     loading: false, // 提交加载状态
     today: '' // 今日日期（作为日期选择起始）
@@ -62,11 +64,12 @@ Page({
     });
   },
 
-  // 开关变化（已付）
-  handleSwitchChange(e) {
-    const { key } = e.currentTarget.dataset;
+  // 费用类型变化
+  handleFeeTypeChange(e) {
+    const index = e.detail.value;
     this.setData({
-      [`formData.${key}`]: e.detail.value
+      feeTypeIndex: index,
+      'formData.feeType': this.data.feeTypeOptions[index]
     });
   },
 
@@ -93,10 +96,9 @@ Page({
   },
 
   // 表单提交
-  // pages/form/form.js
   formSubmit(e) {
-    // 1. 表单验证（原有逻辑保留）
-    const { name, department, project, deliveryTime, fee } = this.data.formData;
+    // 1. 表单验证
+    const { name, department, project, deliveryTime, feeType, paidAmount } = this.data.formData;
     if (!name) {
       wx.showToast({ title: '请输入姓名', icon: 'none' });
       return;
@@ -113,12 +115,16 @@ Page({
       wx.showToast({ title: '请选择交付时间', icon: 'none' });
       return;
     }
-    if (!fee || isNaN(Number(fee)) || Number(fee) <= 0) {
-      wx.showToast({ title: '请输入有效的费用金额', icon: 'none' });
+    if (!feeType) {
+      wx.showToast({ title: '请选择费用类型', icon: 'none' });
+      return;
+    }
+    if (!paidAmount || isNaN(Number(paidAmount)) || Number(paidAmount) <= 0) {
+      wx.showToast({ title: '请输入有效的已付金额', icon: 'none' });
       return;
     }
 
-    // 2. 提交数据（核心修改：添加openid）
+    // 2. 提交数据
     this.setData({ loading: true });
 
     const app = getApp();
@@ -126,13 +132,13 @@ Page({
 
     // 获取云数据库引用
     const db = wx.cloud.database();
-    // 整理提交的数据（新增openid字段）
+    // 整理提交的数据
     const submitData = {
       ...this.data.formData,
-      fee: Number(fee),
+      paidAmount: Number(paidAmount),
       createTime: db.serverDate(),
       updateTime: db.serverDate(),
-      openid: openid // 关键：绑定当前用户的openid
+      openid: openid
     };
 
     // 插入到数据库集合中
